@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Desafio java</string>
+        <string-array name="operators_array">
+            <item>+</item>
+            <item>-</item>
+            <item>x</item>
+            <item>÷</item>
+        </string-array>
+
 </resources>

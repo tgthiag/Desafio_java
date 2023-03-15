@@ -1,12 +1,20 @@
 package com.tgapps.desafiojava;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tgapps.desafiojava.databinding.ActivityMainBinding;
@@ -32,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Integer> numList = new ArrayList<>();
 
+//        BUTTONS HIDE AND SHOW LAYOUT
         binding.bt1.setOnClickListener(v -> {
             hideView(binding.containerNumeros);
         });
@@ -44,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         binding.bt4.setOnClickListener(v -> {
             hideView(binding.containerTabuada);
         });
+
+//        1-ORDER AND SAVE NUMBERS
         AtomicReference<Boolean> sent = new AtomicReference<>(false);
         binding.btNumEnviar.setOnClickListener(v -> {
             if (sent.get()) {
@@ -79,13 +90,27 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
+//        2-CEP API
         binding.btCepEnviar.setOnClickListener(v -> {
             startCep();
         });
-        binding.btPerfectEnviar.setOnClickListener(v->{
+
+//      3-PERFECT NUMBER CALC
+        binding.btPerfectEnviar.setOnClickListener(v -> {
             perfectNumber(Integer.parseInt(binding.editPerfect.getText().toString()));
         });
+
+//      4-ARITHMETIC TABLE
+        Spinner staticSpinner = binding.spinnerTabuada;
+        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter.createFromResource(this, R.array.operators_array, android.R.layout.simple_spinner_item);
+        staticAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        staticSpinner.setAdapter(staticAdapter);
+        binding.btTabuadaEnviar.setOnClickListener(v -> {
+            tabuada(Integer.parseInt(binding.editTabuada.getText().toString()));
+        });
     }
+
 
     private void hideView(View v) {
         binding.containerNumeros.setVisibility(View.GONE);
@@ -146,26 +171,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void tabuada(int number) {
-//        String str = "";
-//        String calculo = "";
-//        for (int i = 0; i <= 10; i++) {
-//            if (document.getElementById("dropdown").innerText.equals("+")) {
-//                calculo = String.format("%d + %d = %d", number, i, number + i);
-//            } else if (document.getElementById("dropdown").innerText.equals("-")) {
-//                calculo = String.format("%d - %d = %d", number, i, number - i);
-//            } else if (document.getElementById("dropdown").innerText.equals("x")) {
-//                calculo = String.format("%d x %d = %d", number, i, number * i);
-//            } else if (document.getElementById("dropdown").innerText.equals("÷")) {
-//                calculo = String.format("%d ÷ %d = %.2f", number, i, (double)number / i);
-//            }
-//            str = str.concat(calculo + "\n");
-//        }
-//        if (str.equals(String.valueOf(number)) && !str.equals("0")) {
-//            $("#tabuada_result").text(number + " é um número perfeito");
-//        } else {
-//            $("#tabuada_result").text(str);
-//        }
+        String selectedItem = binding.spinnerTabuada.getSelectedItem().toString();
+        String str = "";
+        String calculo = "";
+
+        for (int i = 0; i <= 10; i++) {
+            if (selectedItem.equals("+")) {
+                calculo = String.format("%d + %d = %d", number, i, number + i);
+            } else if (selectedItem.equals("-")) {
+                calculo = String.format("%d - %d = %d", number, i, number - i);
+            } else if (selectedItem.equals("x")) {
+                calculo = String.format("%d x %d = %d", number, i, number * i);
+            } else if (selectedItem.equals("÷")) {
+                calculo = String.format("%d ÷ %d = %.2f", number, i, (double) number / i);
+            }
+            str = str.concat(calculo + "\n");
+
+        }
+        popup(this, str);
+    }
+
+    private void popup(Context context, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        TextView textView = new TextView(context);
+        textView.setText(message);
+        textView.setGravity(Gravity.CENTER);
+        builder.setView(textView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }
