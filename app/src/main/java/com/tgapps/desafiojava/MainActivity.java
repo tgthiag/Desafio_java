@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         });
         AtomicReference<Boolean> sent = new AtomicReference<>(false);
         binding.btNumEnviar.setOnClickListener(v -> {
-            if (sent.get()){
+            if (sent.get()) {
                 numList.removeAll(numList);
                 sent.set(false);
             }
@@ -81,7 +81,9 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.btCepEnviar.setOnClickListener(v -> {
             startCep();
-
+        });
+        binding.btPerfectEnviar.setOnClickListener(v->{
+            perfectNumber(Integer.parseInt(binding.editPerfect.getText().toString()));
         });
     }
 
@@ -128,8 +130,42 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
     }
 
+    private void perfectNumber(int number) {
+        int temp = 0;
+        for (int i = 1; i <= number / 2; i++) {
+            if (number % i == 0) {
+                temp += i;
+            }
+        }
+        if (temp == number && temp != 0) {
+            binding.perfectResultado.setText(number + " é um número perfeito.");
+        } else {
+            binding.perfectResultado.setText(number + " não é um número perfeito.");
+        }
+    }
+
+    public void tabuada(int number) {
+//        String str = "";
+//        String calculo = "";
+//        for (int i = 0; i <= 10; i++) {
+//            if (document.getElementById("dropdown").innerText.equals("+")) {
+//                calculo = String.format("%d + %d = %d", number, i, number + i);
+//            } else if (document.getElementById("dropdown").innerText.equals("-")) {
+//                calculo = String.format("%d - %d = %d", number, i, number - i);
+//            } else if (document.getElementById("dropdown").innerText.equals("x")) {
+//                calculo = String.format("%d x %d = %d", number, i, number * i);
+//            } else if (document.getElementById("dropdown").innerText.equals("÷")) {
+//                calculo = String.format("%d ÷ %d = %.2f", number, i, (double)number / i);
+//            }
+//            str = str.concat(calculo + "\n");
+//        }
+//        if (str.equals(String.valueOf(number)) && !str.equals("0")) {
+//            $("#tabuada_result").text(number + " é um número perfeito");
+//        } else {
+//            $("#tabuada_result").text(str);
+//        }
+    }
 
 }
